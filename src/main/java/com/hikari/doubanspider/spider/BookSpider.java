@@ -51,7 +51,7 @@ public class BookSpider {
 
                     list.add(id);
                 }
-                Thread.sleep(6000);
+                Thread.sleep(1000);
             }
 
             String api = "https://api.douban.com/v2/book/";
@@ -60,7 +60,7 @@ public class BookSpider {
                     list) {
 
                 String doc = httpPost(api + s, map, cookie);
-                Thread.sleep(20000);
+                Thread.sleep(30000);
                 Book book = JSON.parseObject(doc, Book.class);
                 System.out.println(book.toString());
                 bookMapper.insert(book);
