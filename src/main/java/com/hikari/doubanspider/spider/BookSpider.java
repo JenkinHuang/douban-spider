@@ -3,7 +3,7 @@ package com.hikari.doubanspider.spider;
 import com.alibaba.fastjson.JSON;
 import com.hikari.doubanspider.bean.Book;
 import com.hikari.doubanspider.mapper.BookMapper;
-import org.jsoup.Connection;
+import com.hikari.doubanspider.utils.JSoupPostRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class BookSpider {
@@ -32,8 +30,6 @@ public class BookSpider {
             String url = "https://book.douban.com/top250";
 
             ArrayList<String> list = new ArrayList<>();
-            Map<String, String> map = new HashMap<>();
-            String cookie = "douban";
 
             Document document;
             Elements elements;
@@ -59,31 +55,15 @@ public class BookSpider {
             for (String s :
                     list) {
 
-                String doc = httpPost(api + s, map, cookie);
-                Thread.sleep(30000);
+                String doc = JSoupPostRequest.post(api + s);
+                Thread.sleep(60000);
                 Book book = JSON.parseObject(doc, Book.class);
                 System.out.println(book.toString());
                 bookMapper.insert(book);
             }
 
-
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    private static String httpPost(String url, Map<String, String> map, String cookie) throws IOException {
-        //获取请求连接
-        Connection con = Jsoup.connect(url);
-        //遍历生成参数
-        if(map!=null){
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                //添加参数
-                con.data(entry.getKey(), entry.getValue());
-            }
-        }
-        //插入cookie（头文件形式）
-        con.header("Cookie", cookie);
-        return con.ignoreContentType(true).post().selectFirst("body").text();
     }
 }
