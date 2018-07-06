@@ -1,21 +1,16 @@
-package com.hikari.doubanspider;
+package com.hikari.doubanspider.spider;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hikari.doubanspider.utils.JSoupPostRequest;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class DoubanSpiderApplicationTests {
+@Service
+public class MovieSpider {
 
-    @Test
-    public void contextLoads() {
+    public void top250MovieSpider() {
         String url = "http://api.douban.com/v2/movie/top250";
         try {
             String data = JSoupPostRequest.post(url);
@@ -26,5 +21,4 @@ public class DoubanSpiderApplicationTests {
             e.printStackTrace();
         }
     }
-
 }
